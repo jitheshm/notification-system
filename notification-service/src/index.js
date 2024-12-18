@@ -3,12 +3,13 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 import { connectToDatabase } from './config/dbConnect.js';
+import { connectToRedis } from './config/redisConnection.js';
 import userRoute from './routes/userRoute.js';
+import notificationRoute from './routes/notificationRoute.js'
 import http from 'http';
 import cookieParser from 'cookie-parser';
 import { Server as SocketIo } from 'socket.io';
 import { socketConnection } from './controllers/notificationController.js';
-import { connectToRedis } from './config/redisConnection.js';
 import { authenticateSocket } from './middlewares/authSocketMiddleware.js';
 
 
@@ -35,12 +36,13 @@ connectToDatabase();
 
 // User routes
 app.use('/api/user/', userRoute);
+app.use('/api/notifications',notificationRoute)
 
 // Create HTTP server for Express
 const server = http.createServer(app);
 
 // Integrate Socket.IO with the server
-const io = new SocketIo(server, {
+export const io = new SocketIo(server, {
   cors: {
     origin: process.env.FRONTEND_URL,
     methods: ["GET", "POST"],
