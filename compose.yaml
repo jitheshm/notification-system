@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: notification-service
+    image: jitheshmjithooz/notification-service
+    build: ./notification-service
+    restart: unless-stopped
+    ports:
+      - "3000:3000"  
+    networks:
+      - app-network  
+    env_file:
+      - ./notification-service/.env
+    develop:
+      watch:
+        - action: sync
+          path: ./notification-service
+          target: /usr/src/app/
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./notification-service/package.json
+
+networks:
+  app-network:
+    driver: bridge 
