@@ -7,8 +7,11 @@ import userRoute from './routes/userRoute.js'
 const app = express()
 
 
-
-app.use(cors())
+const corsOptions = {
+    origin: process.env.FRONTENT_URL, // Frontend URL
+    credentials: true, // Allow cookies to be sent
+  };
+app.use(cors(corsOptions))
 app.use(express.json())
 connectToDatabase()
 app.use('/api/user/', userRoute)
