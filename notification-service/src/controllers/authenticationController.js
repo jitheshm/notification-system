@@ -1,7 +1,8 @@
 import UserModel from "../models/UserModel.js"
-import { hashPassword } from "../utils/bycrypt.js";
+import { hashPassword, verifyPassword } from "../utils/bycrypt.js";
+import { generateToken } from "../utils/token.js";
 
-const signupUser = async (req, res) => {
+export const signupUser = async (req, res) => {
     try {
         let { email, password } = req.body;
         const userExist = await UserModel.findOne({ email: email });
@@ -22,6 +23,31 @@ const signupUser = async (req, res) => {
     }
 }
 
+export const loginUser = async (req, res) => {
+    try {
+        let { email, password } = req.body;
+        const userExist = await UserModel.findOne({ email: email });
+        if (!userExist)
+            return res
+                .status(401)
+                .json({ success: false, message: "email or password is incorrect" });
+
+        const isMatch = await verifyPassword(password, userExist.password);
+        if (!isMatch)
+            return res
+                .status(401)
+                .json({ success: false, message: "email or password is incorrect" });
+
+        const token = generateToken(userExist._id);
+        res.cookie("token", token, { sameSite: "lax" });
+        res
+            .status(200)
+            .json({ success: true, message: "user login successfully" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "user login failed" });
+    }
+}
 
 
-export default signupUser
+
