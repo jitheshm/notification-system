@@ -14,7 +14,7 @@ const subscribeToNotifications = () => {
         // Check if the notification is for the specific user
         if (notification.userId) {
             if (activeConnections[notification.userId]) {
-                io.to(activeConnections[notification.userId].socketId).emit('notification', {message:notification.message});
+                io.to(activeConnections[notification.userId].socketId).emit('notification', { message: notification.message });
             }
         } else {
             io.emit('notification', notification);
