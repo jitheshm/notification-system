@@ -38,7 +38,7 @@ export const loginUser = async (req, res) => {
                 .status(401)
                 .json({ success: false, message: "email or password is incorrect" });
 
-        const token = generateToken(userExist._id);
+        const token = generateToken(userExist._id,userExist.email);
         res.cookie("token", token, { sameSite: "lax" });
         res
             .status(200)

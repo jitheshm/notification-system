@@ -1,6 +1,14 @@
 version: "3.8"
 
 services:
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network  
+
   notification-service:
     container_name: notification-service
     image: jitheshmjithooz/notification-service
@@ -10,6 +18,8 @@ services:
       - "3000:3000"  
     networks:
       - app-network  
+    depends_on:
+      - redis
     env_file:
       - ./notification-service/.env
     develop:
@@ -34,6 +44,8 @@ services:
       - app-network
     env_file:
       - ./frontend/.env
+    depends_on:
+      - notification-service
     develop:
       watch:
         - action: sync

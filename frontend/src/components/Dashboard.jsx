@@ -4,12 +4,14 @@ import io from 'socket.io-client';
 function Dashboard() {
 
   useEffect(()=>{
-    const socket = io('http://localhost:3000');
+    const socket = io('http://localhost:3000', {
+      withCredentials: true,
+    });
 
     return () => {
       socket.disconnect();
     };
-    
+
   },[])
   return <div>dashboard</div>;
 }

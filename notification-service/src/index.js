@@ -8,17 +8,20 @@ import http from 'http';
 import cookieParser from 'cookie-parser';
 import { Server as SocketIo } from 'socket.io';
 import { socketConnection } from './controllers/notificationController.js';
+import { connectToRedis } from './config/redisConnection.js';
+import { authenticateSocket } from './middlewares/authSocketMiddleware.js';
 
 
 const app = express();
 app.use(cookieParser());
+connectToRedis()
 
 // CORS options to allow credentials (cookies) to be sent
 const corsOptions = {
-  origin: process.env.FRONTEND_URL,  
-  credentials: true, 
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-  allowedHeaders: ['Content-Type', 'Authorization'], 
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 // Use CORS middleware with the options
@@ -46,6 +49,9 @@ const io = new SocketIo(server, {
 });
 
 
+
+
+io.use(authenticateSocket);
 
 io.on('connection', socketConnection);
 
