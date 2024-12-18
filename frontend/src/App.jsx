@@ -1,11 +1,8 @@
 import { createContext, useState } from "react";
 // import "./App.css";
 import AuthComponent from "./components/Auth";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  useNavigate,
-} from "react-router";
+import { createBrowserRouter, RouterProvider, useNavigate } from "react-router";
+import Dashboard from "./components/Dashboard";
 
 export const AuthContext = createContext({
   auth: false,
@@ -22,7 +19,7 @@ function App() {
         <AuthContext.Provider
           value={{ auth: authStatus, setAuth: setAuthStatus }}
         >
-          {authStatus ? null : <AuthComponent />}
+          {authStatus ? <Dashboard /> : <AuthComponent />}
         </AuthContext.Provider>
       ),
     },
