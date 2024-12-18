@@ -87,3 +87,12 @@ export const targetNotificationController = async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to send notification' });
     }
 }
+
+export const fetchActiveUsers = (req, res) => {
+    try {
+        const activeUsers = Object.entries(activeConnections).map((user) => ({ email: user[1].email, userId: user[0] }))
+        res.status(200).json({ success: true, data: activeUsers })
+    } catch (error) {
+        res.status(500).json({ success: false, message: "failed to fetch active users" })
+    }
+}

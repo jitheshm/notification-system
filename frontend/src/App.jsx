@@ -3,6 +3,7 @@ import { createContext, useState } from "react";
 import AuthComponent from "./components/Auth";
 import { createBrowserRouter, RouterProvider, useNavigate } from "react-router";
 import Dashboard from "./components/Dashboard";
+import AdminDashboard from "./components/admin/Dashboard";
 
 export const AuthContext = createContext({
   auth: false,
@@ -22,6 +23,10 @@ function App() {
           {authStatus ? <Dashboard /> : <AuthComponent />}
         </AuthContext.Provider>
       ),
+    },
+    {
+      path: "/admin",
+      element: <AdminDashboard />,
     },
   ]);
 
