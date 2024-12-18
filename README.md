@@ -56,4 +56,7 @@ Make sure you have the following installed on your system:
 - The Notification-service will run at port 3000.
 - The Frontend-service  will run at port 5173.
 
+- Admin panel: http://localhost:5173/admin
+- User panel:http://localhost:5173
+
 
