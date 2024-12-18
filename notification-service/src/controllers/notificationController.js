@@ -13,11 +13,9 @@ const subscribeToNotifications = () => {
 
         // Check if the notification is for the specific user
         if (notification.userId) {
-
             if (activeConnections[notification.userId]) {
-                io.to(activeConnections[notification.userId].socketId).emit('notification', notification);
+                io.to(activeConnections[notification.userId].socketId).emit('notification', {message:notification.message});
             }
-
         } else {
             io.emit('notification', notification);
         }
@@ -68,5 +66,24 @@ export const broadcastController = async (req, res) => {
         console.error('Error broadcasting notification:', error);
         res.status(500).json({ success: false, message: 'Failed to broadcast notification' });
 
+    }
+}
+
+export const targetNotificationController = async (req, res) => {
+    try {
+        const { userId, message } = req.body;
+        const targetUserSocket = activeConnections[userId];
+        const notification = { userId, message };
+
+        if (targetUserSocket) {
+            await publisher.publish('notifications', JSON.stringify(notification));
+        } else {
+            await redisClient.rPush(`offline_notifications:${userId}`, JSON.stringify(notification));
+        }
+
+        res.status(200).json({ success: true, message: 'Notification sent successfully' });
+    } catch (error) {
+        console.error('Error sending notification:', error);
+        res.status(500).json({ success: false, message: 'Failed to send notification' });
     }
 }
